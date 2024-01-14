@@ -87,12 +87,13 @@ class MainActivity : AppCompatActivity() {
             getCurrentLocation()
         }
     }
+
     private fun getCityWeather(city: String) {
 
-        binding.progressBar.visibility= View.VISIBLE
+        binding.progressBar.visibility = View.VISIBLE
 
-        ApiUtilities.getApiInterface()?.getCityWeatherData(city,apiKey)
-            ?.enqueue(object :Callback<WeatherModel> {
+        ApiUtilities.getApiInterface()?.getCityWeatherData(city, apiKey)
+            ?.enqueue(object : Callback<WeatherModel> {
                 @RequiresApi(Build.VERSION_CODES.O)
                 override fun onResponse(
                     call: Call<WeatherModel>,
@@ -124,16 +125,20 @@ class MainActivity : AppCompatActivity() {
             }
             )
     }
+
     private fun fetchCurrentLocationWeather(latitude: String, longitude: String) {
 
-        ApiUtilities.getApiInterface()?.getCurrentWeatherData(latitude,longitude,apiKey)
-            ?.enqueue(object :Callback<WeatherModel>{
+        ApiUtilities.getApiInterface()?.getCurrentWeatherData(latitude, longitude, apiKey)
+            ?.enqueue(object : Callback<WeatherModel> {
                 @RequiresApi(Build.VERSION_CODES.O)
-                override fun onResponse(call: Call<WeatherModel>, response: Response<WeatherModel>) {
+                override fun onResponse(
+                    call: Call<WeatherModel>,
+                    response: Response<WeatherModel>
+                ) {
 
-                    if (response.isSuccessful){
+                    if (response.isSuccessful) {
 
-                        binding.progressBar.visibility= View.GONE
+                        binding.progressBar.visibility = View.GONE
 
                         response.body()?.let {
                             setData(it)
@@ -153,11 +158,12 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-    private fun getCurrentLocation(){
 
-        if (checkPermissions()){
+    private fun getCurrentLocation() {
 
-            if (isLocationEnabled()){
+        if (checkPermissions()) {
+
+            if (isLocationEnabled()) {
 
                 if (ActivityCompat.checkSelfPermission(
                         this,
@@ -190,8 +196,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-            }
-            else{
+            } else {
 
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
 
@@ -201,8 +206,7 @@ class MainActivity : AppCompatActivity() {
             }
 
 
-        }
-        else{
+        } else {
 
             requestPermission()
 
@@ -210,36 +214,43 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
     private fun requestPermission() {
 
         ActivityCompat.requestPermissions(
             this,
-            arrayOf( Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.ACCESS_FINE_LOCATION),
+            arrayOf(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ),
             LOCATION_REQUEST_CODE
         )
 
 
     }
+
     private fun isLocationEnabled(): Boolean {
 
-        val locationManager: LocationManager =getSystemService(Context.LOCATION_SERVICE)
+        val locationManager: LocationManager = getSystemService(Context.LOCATION_SERVICE)
                 as LocationManager
 
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-                ||locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-
-
+                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
 
 
     }
 
     private fun checkPermissions(): Boolean {
 
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
-            ==PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_GRANTED){
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+            == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
 
             return true
 
@@ -248,74 +259,70 @@ class MainActivity : AppCompatActivity() {
         return false
 
 
-
     }
+
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode==LOCATION_REQUEST_CODE){
+        if (requestCode == LOCATION_REQUEST_CODE) {
 
-            if (grantResults.isNotEmpty() && grantResults[0]==PackageManager.PERMISSION_GRANTED){
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
                 getCurrentLocation()
 
-            }
-            else{
-
-
+            } else {
 
 
             }
-
 
 
         }
 
 
-
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun setData(body:WeatherModel){
+    private fun setData(body: WeatherModel) {
 
         binding.apply {
 
-            val currentDate= SimpleDateFormat("dd/MM/yyyy hh:mm").format(Date())
+            val currentDate = SimpleDateFormat("dd/MM/yyyy hh:mm").format(Date())
 
-            dateTime.text=currentDate.toString()
+            dateTime.text = currentDate.toString()
 
-            maxTemp.text="Max "+k2c(body?.main?.temp_max!!)+"°"
+            maxTemp.text = "Max " + k2c(body?.main?.temp_max!!) + "°"
 
-            minTemp.text="Min "+k2c(body?.main?.temp_min!!)+"°"
+            minTemp.text = "Min " + k2c(body?.main?.temp_min!!) + "°"
 
-            temp.text=""+k2c(body?.main?.temp!!)+"°"
+            temp.text = "" + k2c(body?.main?.temp!!) + "°"
 
-            weatherTitle.text=body.weather[0].main
+            weatherTitle.text = body.weather[0].main
 
-            sunriseValue.text=ts2td(body.sys.sunrise.toLong())
+            sunriseValue.text = ts2td(body.sys.sunrise.toLong())
 
-            sunsetValue.text=ts2td(body.sys.sunset.toLong())
+            sunsetValue.text = ts2td(body.sys.sunset.toLong())
 
-            pressureValue.text=body.main.pressure.toString()
+            pressureValue.text = body.main.pressure.toString()
 
-            humidityValue.text=body.main.humidity.toString()+"%"
+            humidityValue.text = body.main.humidity.toString() + "%"
 
-            tempFValue.text=""+(k2c(body.main.temp).times(1.8)).plus(32)
-                .roundToInt()+"°"
+            tempFValue.text = "" + (k2c(body.main.temp).times(1.8)).plus(32)
+                .roundToInt() + "°"
 
             citySearch.setText(body.name)
 
-            feelsLike.text= "Hissedilen "+k2c(body.main.feels_like)+"°"
+            feelsLike.text = "Hissedilen " + k2c(body.main.feels_like) + "°"
 
-            windValue.text=body.wind.speed.toString()+"m/s"
+            windValue.text = body.wind.speed.toString() + "m/s"
 
-            groundValue.text=body.main.grnd_level.toString()
+            groundValue.text = body.main.grnd_level.toString()
 
-            seaValue.text=body.main.sea_level.toString()
+            seaValue.text = body.main.sea_level.toString()
 
-            countryValue.text=body.sys.country
+            countryValue.text = body.sys.country
 
 
         }
@@ -324,10 +331,11 @@ class MainActivity : AppCompatActivity() {
 
 
     }
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun ts2td(ts:Long):String{
 
-        val localTime=ts.let {
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun ts2td(ts: Long): String {
+
+        val localTime = ts.let {
 
             Instant.ofEpochSecond(it)
                 .atZone(ZoneId.systemDefault())
@@ -340,11 +348,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun k2c(t:Double):Double{
+    private fun k2c(t: Double): Double {
 
-        var intTemp=t
+        var intTemp = t
 
-        intTemp=intTemp.minus(273)
+        intTemp = intTemp.minus(273)
 
         return intTemp.toBigDecimal().setScale(1, RoundingMode.UP).toDouble()
     }
@@ -362,10 +370,10 @@ class MainActivity : AppCompatActivity() {
 
                     weatherImg.setImageResource(R.drawable.ic_storm_weather)
 
-                    mainLayout.background= ContextCompat
+                    mainLayout.background = ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.thunderstrom_bg)
 
-                    optionsLayout.background= ContextCompat
+                    optionsLayout.background = ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.thunderstrom_bg)
 
                     setWeatherTitle("Fırtına")
@@ -376,10 +384,10 @@ class MainActivity : AppCompatActivity() {
 
                     weatherImg.setImageResource(R.drawable.ic_few_clouds)
 
-                    mainLayout.background= ContextCompat
+                    mainLayout.background = ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.drizzle_bg)
 
-                    optionsLayout.background= ContextCompat
+                    optionsLayout.background = ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.drizzle_bg)
 
                     setWeatherTitle("Çiselti")
@@ -390,10 +398,10 @@ class MainActivity : AppCompatActivity() {
 
                     weatherImg.setImageResource(R.drawable.ic_rainy_weather)
 
-                    mainLayout.background= ContextCompat
+                    mainLayout.background = ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.rain_bg)
 
-                    optionsLayout.background= ContextCompat
+                    optionsLayout.background = ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.rain_bg)
                     setWeatherTitle("Yağmurlu")
                 }
@@ -403,10 +411,10 @@ class MainActivity : AppCompatActivity() {
 
                     weatherImg.setImageResource(R.drawable.ic_snow_weather)
 
-                    mainLayout.background= ContextCompat
+                    mainLayout.background = ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.snow_bg)
 
-                    optionsLayout.background= ContextCompat
+                    optionsLayout.background = ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.snow_bg)
                     setWeatherTitle("Karlı")
 
@@ -417,11 +425,11 @@ class MainActivity : AppCompatActivity() {
 
                     weatherImg.setImageResource(R.drawable.ic_broken_clouds)
 
-                    mainLayout.background= ContextCompat
+                    mainLayout.background = ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.atmosphere_bg)
 
 
-                    optionsLayout.background= ContextCompat
+                    optionsLayout.background = ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.atmosphere_bg)
                     setWeatherTitle("Parçalı Bulutlu")
 
@@ -432,10 +440,10 @@ class MainActivity : AppCompatActivity() {
 
                     weatherImg.setImageResource(R.drawable.ic_clear_day)
 
-                    mainLayout.background= ContextCompat
+                    mainLayout.background = ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.clear_bg)
 
-                    optionsLayout.background= ContextCompat
+                    optionsLayout.background = ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.clear_bg)
                     setWeatherTitle("Açık Hava")
                 }
@@ -445,42 +453,38 @@ class MainActivity : AppCompatActivity() {
 
                     weatherImg.setImageResource(R.drawable.ic_cloudy_weather)
 
-                    mainLayout.background= ContextCompat
+                    mainLayout.background = ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.clouds_bg)
 
-                    optionsLayout.background= ContextCompat
+                    optionsLayout.background = ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.clouds_bg)
 
                     setWeatherTitle("Bulutlu")
                 }
 
                 //unknown
-                else->{
+                else -> {
 
                     weatherImg.setImageResource(R.drawable.ic_unknown)
 
-                    mainLayout.background= ContextCompat
+                    mainLayout.background = ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.unknown_bg)
 
-                    optionsLayout.background= ContextCompat
+                    optionsLayout.background = ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.unknown_bg)
 
                     setWeatherTitle("Bilinmeyen")
                 }
 
 
-
             }
-
-
-
 
 
         }
 
 
-
     }
+
     private fun setWeatherTitle(title: String) {
         val weatherTitleView = findViewById<TextView>(R.id.weather_title)
         weatherTitleView.text = title
