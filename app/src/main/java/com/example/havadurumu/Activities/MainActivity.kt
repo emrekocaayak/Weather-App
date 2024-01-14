@@ -16,6 +16,7 @@ import android.util.Log
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -367,7 +368,7 @@ class MainActivity : AppCompatActivity() {
                     optionsLayout.background= ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.thunderstrom_bg)
 
-
+                    setWeatherTitle("Fırtına")
                 }
 
                 //Drizzle
@@ -381,7 +382,7 @@ class MainActivity : AppCompatActivity() {
                     optionsLayout.background= ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.drizzle_bg)
 
-
+                    setWeatherTitle("Çiselti")
                 }
 
                 //Rain
@@ -394,7 +395,7 @@ class MainActivity : AppCompatActivity() {
 
                     optionsLayout.background= ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.rain_bg)
-
+                    setWeatherTitle("Yağmurlu")
                 }
 
                 //Snow
@@ -407,10 +408,11 @@ class MainActivity : AppCompatActivity() {
 
                     optionsLayout.background= ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.snow_bg)
+                    setWeatherTitle("Karlı")
 
                 }
 
-                //Atmosphere
+                //Broken Clouds
                 in 701..781 -> {
 
                     weatherImg.setImageResource(R.drawable.ic_broken_clouds)
@@ -421,6 +423,7 @@ class MainActivity : AppCompatActivity() {
 
                     optionsLayout.background= ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.atmosphere_bg)
+                    setWeatherTitle("Parçalı Bulutlu")
 
                 }
 
@@ -434,7 +437,7 @@ class MainActivity : AppCompatActivity() {
 
                     optionsLayout.background= ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.clear_bg)
-
+                    setWeatherTitle("Açık Hava")
                 }
 
                 //Clouds
@@ -448,6 +451,7 @@ class MainActivity : AppCompatActivity() {
                     optionsLayout.background= ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.clouds_bg)
 
+                    setWeatherTitle("Bulutlu")
                 }
 
                 //unknown
@@ -461,8 +465,9 @@ class MainActivity : AppCompatActivity() {
                     optionsLayout.background= ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.unknown_bg)
 
-
+                    setWeatherTitle("Bilinmeyen")
                 }
+
 
 
             }
@@ -475,6 +480,10 @@ class MainActivity : AppCompatActivity() {
 
 
 
+    }
+    private fun setWeatherTitle(title: String) {
+        val weatherTitleView = findViewById<TextView>(R.id.weather_title)
+        weatherTitleView.text = title
     }
 }
 

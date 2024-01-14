@@ -170,10 +170,10 @@
                         <ImageView
                             android:id="@+id/weather_img"
                             android:layout_width="125dp"
-                            android:layout_height="125dp"
+                            android:layout_height="131dp"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_launcher_foreground"
-                            android:scaleType="fitXY">
+                            android:scaleType="fitXY"
+                            android:src="@drawable/ic_launcher_foreground">
 
                         </ImageView>
 
