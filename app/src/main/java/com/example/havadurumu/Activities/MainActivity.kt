@@ -445,7 +445,7 @@ class MainActivity : AppCompatActivity() {
 
                     optionsLayout.background = ContextCompat
                         .getDrawable(this@MainActivity, R.drawable.clear_bg)
-                    setWeatherTitle("Açık Hava")
+                    setWeatherTitle("Güneşli")
                 }
 
                 //Clouds
